@@ -1,0 +1,35 @@
+import telebot
+from telebot import types
+
+bot = telebot.TeleBot("6266539051:AAGp0vOuHt3WddjbADQwUcarX7Wn4i8pgNk")
+
+bot.set_my_commands(
+    commands=[
+        telebot.types.BotCommand("start", "开始"),
+        telebot.types.BotCommand("id", "查询id")
+    ]
+)
+
+@bot.message_handler(commands=['start'])
+def start_handler(message):
+    user_id = message.from_user.id
+    login_url = f"https://sso.vpslog.net/login?id={user_id}&redirect=https://distribute.vpslog.net/"  # 登录链接
+    message_text = f"欢迎使用 KEY Distribute bot！请访问以下链接进行登录：\n{login_url}"
+    bot.reply_to(message, message_text)
+
+@bot.message_handler(commands=['id'])
+def ip(message):
+    id = message.from_user.id
+    message_test = f"您的Telegram账户ID为：{id}"
+    bot.reply_to(message, message_test)
+
+#bot.polling()
+def restart():
+    try:
+        bot.polling()
+    except Exception as e:
+        print(e)
+    finally:
+        restart()
+
+restart()
